@@ -1,4 +1,25 @@
 <?php
+// ========== index.php (PUNTO DE ENTRADA) ==========
+session_start();
+require_once 'controller/reservaController.php';
+
+$controller = new reservaController();
+
+$action = $_GET['action'] ?? 'mostrarReserva';
+
+switch($action) {
+    case 'mostrarReserva':
+        $controller->mostrarFormularioReserva();
+        break;
+    case 'confirmarReserva':
+        $controller->confirmarReserva();
+        break;
+    case 'obtenerHorasDisponibles':
+        $controller->obtenerHorasDisponibles();
+        break;
+    default:
+        $controller->mostrarFormularioReserva();
+}
 ?>
 <html lang="es">
 <head>
