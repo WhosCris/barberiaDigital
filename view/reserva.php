@@ -1,31 +1,10 @@
 <?php
-session_start();
-require_once 'controller/reservaController.php';
-
-$controller = new reservaController();
-
-$action = $_GET['action'] ?? 'mostrarReserva';
-
-switch($action) {
-    case 'mostrarReserva':
-        $controller->mostrarFormularioReserva();
-        break;
-    case 'confirmarReserva':
-        $controller->confirmarReserva();
-        break;
-    case 'obtenerHorasDisponibles':
-        $controller->obtenerHorasDisponibles();
-        break;
-    default:
-        $controller->mostrarFormularioReserva();
-}
+// Variables opcionales que vienen del dashboard
+$barberoSeleccionado = $barberoSeleccionado ?? null;
+$horaSeleccionada = $horaSeleccionada ?? null;
+$fechaSeleccionada = $fechaSeleccionada ?? date('Y-m-d');
 ?>
-```
 
----
-
-## **🎨 view/reservas/reserva.php** (VISTA - Interfaz de reserva)
-```php
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -41,13 +20,7 @@ switch($action) {
                 <h3>October 2025</h3>
                 <div class="calendar">
                     <div class="calendar-header">
-                        <div>S</div>
-                        <div>M</div>
-                        <div>T</div>
-                        <div>W</div>
-                        <div>T</div>
-                        <div>F</div>
-                        <div>S</div>
+                        <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
                     </div>
                     <div class="calendar-body" id="calendarBody">
                         <!-- Se genera dinámicamente con JS -->
@@ -60,24 +33,22 @@ switch($action) {
             <h1>Book your appointment</h1>
 
             <?php if(isset($error)): ?>
-                <div class="error-message show">
-                    <?php echo htmlspecialchars($error); ?>
-                </div>
+                <div class="error-message show"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
 
             <?php if(isset($success)): ?>
-                <div class="success-message show">
-                    <?php echo htmlspecialchars($success); ?>
-                </div>
+                <div class="success-message show"><?php echo htmlspecialchars($success); ?></div>
             <?php endif; ?>
 
             <form id="reservaForm" method="POST" action="index.php?action=confirmarReserva">
+                <!-- Barbero -->
                 <div class="form-group">
                     <select name="barbero_id" id="barberoSelect" required>
                         <option value="">Select barber</option>
                         <?php if(isset($barberos) && !empty($barberos)): ?>
                             <?php foreach($barberos as $barbero): ?>
-                                <option value="<?php echo $barbero['id']; ?>">
+                                <option value="<?php echo $barbero['id']; ?>"
+                                    <?php echo ($barberoSeleccionado == $barbero['id']) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($barbero['nombre']); ?>
                                 </option>
                             <?php endforeach; ?>
@@ -88,6 +59,7 @@ switch($action) {
                     <?php endif; ?>
                 </div>
 
+                <!-- Servicio -->
                 <div class="form-group">
                     <select name="servicio_id" id="servicioSelect" required>
                         <option value="">Select service</option>
@@ -104,22 +76,31 @@ switch($action) {
                     <?php endif; ?>
                 </div>
 
+                <!-- Fecha -->
                 <div class="form-group">
-                    <input type="date" name="fecha" id="fechaInput" placeholder="Select date" required>
+                    <input type="date" name="fecha" id="fechaInput" placeholder="Select date" required
+                        value="<?php echo htmlspecialchars($fechaSeleccionada); ?>">
                     <?php if(isset($errores['fecha'])): ?>
                         <div class="error-text"><?php echo $errores['fecha']; ?></div>
                     <?php endif; ?>
                 </div>
 
+                <!-- Hora -->
                 <div class="form-group">
                     <select name="hora" id="horaSelect" required>
                         <option value="">Select time</option>
+                        <?php if($horaSeleccionada): ?>
+                            <option value="<?php echo $horaSeleccionada; ?>" selected>
+                                <?php echo $horaSeleccionada; ?>
+                            </option>
+                        <?php endif; ?>
                     </select>
                     <?php if(isset($errores['hora'])): ?>
                         <div class="error-text"><?php echo $errores['hora']; ?></div>
                     <?php endif; ?>
                 </div>
 
+                <!-- Nombre cliente -->
                 <div class="form-group">
                     <input type="text" name="nombre_cliente" placeholder="Full name" required
                            value="<?php echo isset($datos['nombre_cliente']) ? htmlspecialchars($datos['nombre_cliente']) : ''; ?>">
@@ -128,6 +109,7 @@ switch($action) {
                     <?php endif; ?>
                 </div>
 
+                <!-- Email cliente -->
                 <div class="form-group">
                     <input type="email" name="email_cliente" placeholder="Email" required
                            value="<?php echo isset($datos['email_cliente']) ? htmlspecialchars($datos['email_cliente']) : ''; ?>">

@@ -11,14 +11,36 @@ class reservaController {
         $this->barberoModel = new barberoModel();
     }
 
-    // Mostrar formulario de reserva
     public function mostrarFormularioReserva() {
+        // 1️⃣ Obtener barberos y servicios para mostrar en el formulario
         $barberos = $this->barberoModel->obtenerBarberos();
         $servicios = $this->barberoModel->obtenerServicios();
+
+        // 2️⃣ Recibir parámetros opcionales desde el dashboard
+        $barberoSeleccionado = $_GET['barbero'] ?? null;
+        $horaSeleccionada = $_GET['hora'] ?? null;
+        $fechaSeleccionada = $_GET['fecha'] ?? date('Y-m-d'); // si no viene, poner hoy
+
+        // 3️⃣ Validar barbero
+        if ($barberoSeleccionado && !in_array($barberoSeleccionado, array_column($barberos, 'id'))) {
+            $barberoSeleccionado = null; // inválido, ignorar
+        }
+
+        // 4️⃣ Validar hora
+        if ($horaSeleccionada) {
+            $horaValida = DateTime::createFromFormat('H:i:s', $horaSeleccionada) 
+                         ?: DateTime::createFromFormat('H:i', $horaSeleccionada);
+            if (!$horaValida) $horaSeleccionada = null;
+        }
+
+        // 5️⃣ Validar fecha
+        $fechaValida = DateTime::createFromFormat('Y-m-d', $fechaSeleccionada);
+        if (!$fechaValida) $fechaSeleccionada = date('Y-m-d');
+
+        // 6️⃣ Incluir la vista
         include 'view/reserva.php';
     }
 
-    // Procesar confirmación de reserva
     public function confirmarReserva() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: index.php');
@@ -52,7 +74,6 @@ class reservaController {
             }
         }
 
-        // Si hay errores, volver al formulario
         if (!empty($errores)) {
             $barberos = $this->barberoModel->obtenerBarberos();
             $servicios = $this->barberoModel->obtenerServicios();
@@ -60,24 +81,21 @@ class reservaController {
             return;
         }
 
-        // Crear reserva
         $resultado = $this->reservaModel->crearReserva($datos);
+
+        $barberos = $this->barberoModel->obtenerBarberos();
+        $servicios = $this->barberoModel->obtenerServicios();
 
         if ($resultado['success']) {
             $success = '¡Reserva confirmada exitosamente!';
-            $datos = []; // Limpiar datos
-            $barberos = $this->barberoModel->obtenerBarberos();
-            $servicios = $this->barberoModel->obtenerServicios();
-            include 'view/reserva.php';
+            $datos = [];
         } else {
             $error = $resultado['mensaje'];
-            $barberos = $this->barberoModel->obtenerBarberos();
-            $servicios = $this->barberoModel->obtenerServicios();
-            include 'view/reserva.php';
         }
+
+        include 'view/reserva.php';
     }
 
-    // API para obtener horas disponibles (AJAX)
     public function obtenerHorasDisponibles() {
         header('Content-Type: application/json');
         

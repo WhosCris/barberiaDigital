@@ -1,50 +1,72 @@
 <?php
-// ========== index.php (PUNTO DE ENTRADA) ==========
 session_start();
+require_once 'controller/loginController.php';
+require_once 'controller/registroController.php';
 require_once 'controller/reservaController.php';
+require_once 'controller/dashboardController.php';
 
-$controller = new reservaController();
-
-$action = $_GET['action'] ?? 'mostrarReserva';
+$action = $_GET['action'] ?? 'mostrarDashboard';
 
 switch($action) {
+    // === RUTA PRINCIPAL ===
+    case 'mostrarDashboard':
+        $controller = new dashboardController();
+        $controller->mostrarDashboard();
+        break;
+    
+    // === RUTAS DE LOGIN ===
+    case 'mostrarLogin':
+        $controller = new loginController();
+        $controller->mostrarFormularioLogin();
+        break;
+    
+    case 'procesarLogin':
+        $controller = new loginController();
+        $controller->procesarLogin();
+        break;
+    
+    case 'logout':
+        $controller = new loginController();
+        $controller->logout();
+        break;
+    
+    // === RUTAS DE REGISTRO ===
+    case 'mostrarRegistro':
+        $controller = new registroController();
+        $controller->mostrarFormularioRegistro();
+        break;
+    
+    case 'procesarRegistro':
+        $controller = new registroController();
+        $controller->procesarRegistro();
+        break;
+    
+    // === RUTAS DE RESERVA ===
     case 'mostrarReserva':
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: index.php?action=mostrarLogin');
+            exit;
+        }
+        $controller = new reservaController();
         $controller->mostrarFormularioReserva();
         break;
+    
     case 'confirmarReserva':
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: index.php?action=mostrarLogin');
+            exit;
+        }
+        $controller = new reservaController();
         $controller->confirmarReserva();
         break;
+    
     case 'obtenerHorasDisponibles':
+        $controller = new reservaController();
         $controller->obtenerHorasDisponibles();
         break;
+    
     default:
-        $controller->mostrarFormularioReserva();
+        $controller = new dashboardController();
+        $controller->mostrarDashboard();
 }
 ?>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Barbería Digital</title>
-    <link rel="stylesheet" href="css/estilos.css">
-</head>
-<body>
-    <header>
-        <h1>Bienvenido a Barbería Digital</h1>
-        <nav>
-            <ul>
-                <li><a href="#">Inicio</a></li>
-                <li><a href="#">Servicios</a></li>
-                <li><a href="#">Contacto</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <?php
-            echo "<p>¡Gracias por visitarnos!</p>";
-        ?>
-    </main>
-    <footer>
-        <p>&copy; <?php echo date("Y"); ?> Barbería Digital. Todos los derechos reservados.</p>
-    </footer>
-</body>
-</html>

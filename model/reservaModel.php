@@ -1,16 +1,15 @@
 <?php
 require_once 'config/database.php';
 
-class ReservaModel {
+class reservaModel {
     private $conn;
-    private $table = 'reservas';
+    private $table = 'reserva';
 
     public function __construct() {
         $database = new Database();
         $this->conn = $database->getConnection();
     }
 
-    // Validar barbero
     public function validarBarbero($barbero_id) {
         if (empty($barbero_id)) {
             return ['valido' => false, 'mensaje' => 'Debes seleccionar un barbero'];
@@ -18,7 +17,6 @@ class ReservaModel {
         return ['valido' => true];
     }
 
-    // Validar servicio
     public function validarServicio($servicio_id) {
         if (empty($servicio_id)) {
             return ['valido' => false, 'mensaje' => 'Debes seleccionar un servicio'];
@@ -26,7 +24,6 @@ class ReservaModel {
         return ['valido' => true];
     }
 
-    // Validar fecha
     public function validarFecha($fecha) {
         if (empty($fecha)) {
             return ['valido' => false, 'mensaje' => 'Debes seleccionar una fecha'];
@@ -43,7 +40,6 @@ class ReservaModel {
         return ['valido' => true];
     }
 
-    // Validar hora
     public function validarHora($hora) {
         if (empty($hora)) {
             return ['valido' => false, 'mensaje' => 'Debes seleccionar una hora'];
@@ -51,7 +47,6 @@ class ReservaModel {
         return ['valido' => true];
     }
 
-    // Validar nombre
     public function validarNombre($nombre) {
         if (empty(trim($nombre)) || strlen(trim($nombre)) < 2) {
             return ['valido' => false, 'mensaje' => 'El nombre debe tener al menos 2 caracteres'];
@@ -59,7 +54,6 @@ class ReservaModel {
         return ['valido' => true];
     }
 
-    // Validar email
     public function validarEmail($email) {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return ['valido' => false, 'mensaje' => 'Por favor ingresa un email válido'];
@@ -67,17 +61,17 @@ class ReservaModel {
         return ['valido' => true];
     }
 
-    // Verificar disponibilidad
-    public function verificarDisponibilidad($barbero_id, $fecha, $hora) {
-        $query = "SELECT id FROM " . $this->table . " 
-                  WHERE barbero_id = :barbero_id 
+    // Verificar disponibilidad de hora
+    public function verificarDisponibilidad($servicio_id, $fecha, $hora) {
+        $query = "SELECT id_reserva FROM " . $this->table . " 
+                  WHERE id_servicio = :servicio_id 
                   AND fecha = :fecha 
                   AND hora = :hora 
-                  AND estado != 'cancelada'
+                  AND estado_reserva NOT IN ('Cancelada')
                   LIMIT 1";
         
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':barbero_id', $barbero_id);
+        $stmt->bindParam(':servicio_id', $servicio_id);
         $stmt->bindParam(':fecha', $fecha);
         $stmt->bindParam(':hora', $hora);
         $stmt->execute();
@@ -85,57 +79,122 @@ class ReservaModel {
         return $stmt->rowCount() === 0;
     }
 
-    // Crear reserva
+    // Crear reserva (el cliente se crea automáticamente si no existe)
     public function crearReserva($datos) {
-        // Verificar disponibilidad primero
-        if (!$this->verificarDisponibilidad($datos['barbero_id'], $datos['fecha'], $datos['hora'])) {
-            return ['success' => false, 'mensaje' => 'Esta hora ya no está disponible'];
-        }
+        try {
+            $this->conn->beginTransaction();
 
-        $query = "INSERT INTO " . $this->table . " 
-                  (barbero_id, servicio_id, fecha, hora, nombre_cliente, email_cliente, estado) 
-                  VALUES (:barbero_id, :servicio_id, :fecha, :hora, :nombre_cliente, :email_cliente, 'confirmada')";
-        
-        $stmt = $this->conn->prepare($query);
-        
-        $stmt->bindParam(':barbero_id', $datos['barbero_id']);
-        $stmt->bindParam(':servicio_id', $datos['servicio_id']);
-        $stmt->bindParam(':fecha', $datos['fecha']);
-        $stmt->bindParam(':hora', $datos['hora']);
-        $stmt->bindParam(':nombre_cliente', $datos['nombre_cliente']);
-        $stmt->bindParam(':email_cliente', $datos['email_cliente']);
-        
-        if ($stmt->execute()) {
-            return ['success' => true, 'id' => $this->conn->lastInsertId()];
+            // 1. Verificar si el cliente ya existe por email
+            $queryCliente = "SELECT id_usuario FROM usuario WHERE email = :email AND id_tipo_usuario = 2";
+            $stmtCliente = $this->conn->prepare($queryCliente);
+            $stmtCliente->bindParam(':email', $datos['email_cliente']);
+            $stmtCliente->execute();
+            $cliente = $stmtCliente->fetch(PDO::FETCH_ASSOC);
+
+            if ($cliente) {
+                $id_cliente = $cliente['id_usuario'];
+            } else {
+                // Crear nuevo cliente
+                $queryNuevoCliente = "INSERT INTO usuario (nombre, email, password, id_tipo_usuario, estado) 
+                                      VALUES (:nombre, :email, :password, 2, 'activo')";
+                $stmtNuevo = $this->conn->prepare($queryNuevoCliente);
+                $passwordHash = password_hash('123456', PASSWORD_DEFAULT); // Password temporal
+                $stmtNuevo->bindParam(':nombre', $datos['nombre_cliente']);
+                $stmtNuevo->bindParam(':email', $datos['email_cliente']);
+                $stmtNuevo->bindParam(':password', $passwordHash);
+                $stmtNuevo->execute();
+                $id_cliente = $this->conn->lastInsertId();
+            }
+
+            // 2. Verificar disponibilidad
+            if (!$this->verificarDisponibilidad($datos['servicio_id'], $datos['fecha'], $datos['hora'])) {
+                $this->conn->rollBack();
+                return ['success' => false, 'mensaje' => 'Esta hora ya no está disponible'];
+            }
+
+            // 3. Crear la reserva
+            $query = "INSERT INTO " . $this->table . " 
+                      (fecha, hora, estado_reserva, id_servicio, id_cliente) 
+                      VALUES (:fecha, :hora, 'Pendiente', :servicio_id, :cliente_id)";
+            
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':fecha', $datos['fecha']);
+            $stmt->bindParam(':hora', $datos['hora']);
+            $stmt->bindParam(':servicio_id', $datos['servicio_id']);
+            $stmt->bindParam(':cliente_id', $id_cliente);
+            
+            if ($stmt->execute()) {
+                $this->conn->commit();
+                return ['success' => true, 'id' => $this->conn->lastInsertId()];
+            }
+
+            $this->conn->rollBack();
+            return ['success' => false, 'mensaje' => 'Error al crear la reserva'];
+
+        } catch (Exception $e) {
+            $this->conn->rollBack();
+            return ['success' => false, 'mensaje' => 'Error: ' . $e->getMessage()];
         }
-        return ['success' => false, 'mensaje' => 'Error al crear la reserva'];
     }
 
-    // Obtener horas disponibles
+    // Obtener horas disponibles según barbero y fecha
     public function obtenerHorasDisponibles($barbero_id, $fecha) {
+        // Horas base de trabajo
         $horasLaborales = [
             '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
             '12:00', '12:30', '14:00', '14:30', '15:00', '15:30',
-            '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'
+            '16:00', '16:30', '17:00', '17:30', '18:00'
         ];
 
+        // Obtener servicios del barbero
+        $queryServicios = "SELECT id_servicio FROM servicio WHERE id_barbero = :barbero_id";
+        $stmtServ = $this->conn->prepare($queryServicios);
+        $stmtServ->bindParam(':barbero_id', $barbero_id);
+        $stmtServ->execute();
+        $servicios = $stmtServ->fetchAll(PDO::FETCH_COLUMN);
+
+        if (empty($servicios)) {
+            return $horasLaborales; // Si no tiene servicios, todas están disponibles
+        }
+
+        // Obtener horas ocupadas
+        $placeholders = str_repeat('?,', count($servicios) - 1) . '?';
         $query = "SELECT hora FROM " . $this->table . " 
-                  WHERE barbero_id = :barbero_id 
-                  AND fecha = :fecha 
-                  AND estado != 'cancelada'";
+                  WHERE id_servicio IN ($placeholders) 
+                  AND fecha = ? 
+                  AND estado_reserva NOT IN ('Cancelada')";
         
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':barbero_id', $barbero_id);
-        $stmt->bindParam(':fecha', $fecha);
-        $stmt->execute();
+        $params = array_merge($servicios, [$fecha]);
+        $stmt->execute($params);
         
-        $horasOcupadas = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $horasOcupadas[] = $row['hora'];
-        }
+        $horasOcupadas = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        
+        // Convertir formato de tiempo
+        $horasOcupadas = array_map(function($hora) {
+            return date('H:i', strtotime($hora));
+        }, $horasOcupadas);
         
         $horasDisponibles = array_diff($horasLaborales, $horasOcupadas);
         return array_values($horasDisponibles);
     }
+    public function obtenerProximaCita($usuario_id) {
+        $query = "SELECT r.*, s.nombre_servicio, s.precio, u.nombre as barbero_nombre
+                FROM reserva r
+                INNER JOIN servicio s ON r.id_servicio = s.id_servicio
+                INNER JOIN usuario u ON s.id_barbero = u.id_usuario
+                WHERE r.id_cliente = :usuario_id
+                AND r.fecha >= CURDATE()
+                AND r.estado_reserva != 'Cancelada'
+                ORDER BY r.fecha ASC, r.hora ASC
+                LIMIT 1";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':usuario_id', $usuario_id);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
+
 ?>
