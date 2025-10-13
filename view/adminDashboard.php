@@ -1,75 +1,74 @@
-<?php
-if (!isset($_SESSION['logged_in']) || $_SESSION['tipo_usuario'] != 1) {
-    header('Location: index.php?action=mostrarLoginAdmin');
-    exit;
-}
-
-// Datos del admin
-$nombre = $_SESSION['nombre'] ?? '';
+<?php 
+$nombre   = $_SESSION['nombre'] ?? '';
 $apellido = $_SESSION['apellido'] ?? '';
-$email = $_SESSION['email'] ?? '';
+$email    = $_SESSION['email'] ?? '';
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Barbería Online</title>
-    <link rel="stylesheet" href="assets/css/adminDashboard.css">
-    <style>
-        /* Reset y diseño básico */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { display: flex; min-height: 100vh; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - Barbería Online</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { display: flex; min-height: 100vh; background: #ecf0f1; }
 
-        /* Sidebar */
-        .sidebar {
-            width: 220px;
-            background: #2c3e50;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-        .sidebar h2 { margin-bottom: 20px; }
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            margin: 10px 0;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .sidebar a:hover { background: #34495e; }
+    /* Sidebar */
+    .sidebar {
+        width: 220px;
+        background: #2c3e50;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+    }
+    .sidebar h2 { margin-bottom: 20px; }
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        margin: 10px 0;
+        display: block;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    .sidebar a:hover { background: #34495e; }
 
-        /* Header */
-        .header {
-            background: #667eea;
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-        }
-        .header span { margin-right: 20px; font-weight: bold; }
-        .header a { color: white; text-decoration: none; font-weight: bold; }
+    /* Área principal */
+    .main-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
 
-        /* Contenido principal */
-        .main-content {
-            flex: 1;
-            background: #ecf0f1;
-            padding: 20px;
-        }
+    /* Header */
+    .header {
+        background: #667eea;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .header span { font-weight: bold; }
+    .header a { color: white; text-decoration: none; font-weight: bold; }
 
-        /* Tarjetas de ejemplo */
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0px 3px 6px rgba(0,0,0,0.1);
-        }
-    </style>
+    /* Contenido principal */
+    .main-content {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    /* Tarjetas */
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        box-shadow: 0px 3px 6px rgba(0,0,0,0.1);
+    }
+</style>
 </head>
 <body>
     <div class="sidebar">
@@ -82,7 +81,7 @@ $email = $_SESSION['email'] ?? '';
 
     <div class="main-area">
         <div class="header">
-            <span><?php echo htmlspecialchars($nombre . ' ' . $apellido); ?></span>
+            <span><?php echo htmlspecialchars($nombre); ?></span>
             <a href="index.php?action=logoutAdmin">Cerrar sesión</a>
         </div>
 
