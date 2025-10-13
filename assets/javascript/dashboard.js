@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Animación de entrada para las tarjetas
-    const cards = document.querySelectorAll('.schedule-card');
+    // Animación suave para las tarjetas al hacer scroll
+    const cards = document.querySelectorAll('.horario-card');
     
     const observerOptions = {
         threshold: 0.1,
@@ -28,33 +28,61 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(card);
     });
 
-    // Verificar si hay mensaje de bienvenida
-    if (window.location.search.includes('registered=true')) {
-        showWelcomeMessage();
+    // Mensaje de bienvenida si viene desde registro
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('registered') === 'true') {
+        mostrarMensajeBienvenida();
     }
 });
 
-function showWelcomeMessage() {
-    const message = document.createElement('div');
-    message.className = 'welcome-message';
-    message.textContent = '¡Bienvenido! Tu cuenta ha sido creada exitosamente.';
-    message.style.cssText = `
+function mostrarMensajeBienvenida() {
+    const mensaje = document.createElement('div');
+    mensaje.style.cssText = `
         position: fixed;
         top: 20px;
         right: 20px;
-        background: #28a745;
+        background: #10b981;
         color: white;
-        padding: 15px 25px;
+        padding: 16px 24px;
         border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         z-index: 1000;
+        font-weight: 600;
         animation: slideIn 0.3s ease;
     `;
+    mensaje.textContent = '¡Bienvenido! Tu cuenta ha sido creada exitosamente.';
     
-    document.body.appendChild(message);
+    document.body.appendChild(mensaje);
     
     setTimeout(() => {
-        message.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => message.remove(), 300);
+        mensaje.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => mensaje.remove(), 300);
     }, 3000);
+
+
+    const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
 }

@@ -195,6 +195,56 @@ class reservaModel {
         
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function obtenerReservasUsuario($usuario_id) {
+        $query = "SELECT r.*, s.nombre_servicio, s.precio, s.duracion,
+                u.nombre as barbero_nombre
+                FROM reserva r
+                INNER JOIN servicio s ON r.id_servicio = s.id_servicio
+                INNER JOIN usuario u ON s.id_barbero = u.id_usuario
+                WHERE r.id_cliente = :usuario_id
+                ORDER BY r.fecha DESC, r.hora DESC";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':usuario_id', $usuario_id);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function cancelarReserva($reserva_id, $usuario_id) {
+        $query = "UPDATE reserva 
+                SET estado_reserva = 'Cancelada' 
+                WHERE id_reserva = :reserva_id 
+                AND id_cliente = :usuario_id
+                AND fecha >= CURDATE()";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':reserva_id', $reserva_id);
+        $stmt->bindParam(':usuario_id', $usuario_id);
+        
+        return $stmt->execute();
+    }
+
+    // Obtener próximas N citas del usuario
+    public function obtenerProximasCitas($usuario_id, $limite = 3) {
+        $query = "SELECT r.*, s.nombre_servicio, s.precio, u.nombre as barbero_nombre
+                FROM reserva r
+                INNER JOIN servicio s ON r.id_servicio = s.id_servicio
+                INNER JOIN usuario u ON s.id_barbero = u.id_usuario
+                WHERE r.id_cliente = :usuario_id
+                AND r.fecha >= CURDATE()
+                AND r.estado_reserva != 'Cancelada'
+                ORDER BY r.fecha ASC, r.hora ASC
+                LIMIT :limite";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':usuario_id', $usuario_id, PDO::PARAM_INT);
+        $stmt->bindParam(':limite', $limite, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
 ?>
