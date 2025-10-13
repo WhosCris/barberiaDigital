@@ -96,6 +96,66 @@ class usuarioModel {
         $stmt->execute();
         return $stmt->rowCount() > 0;
     }
+    // Verificar si email existe para otro usuario
+public function emailExisteOtroUsuario($email, $usuario_id) {
+    $query = "SELECT id_usuario FROM " . $this->table . " 
+              WHERE email = :email AND id_usuario != :usuario_id 
+              LIMIT 1";
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':usuario_id', $usuario_id);
+    $stmt->execute();
+    return $stmt->rowCount() > 0;
+}
+
+// Actualizar perfil de usuario
+public function actualizarPerfil($datos) {
+    try {
+        // Si hay contraseña nueva, verificar la actual primero
+        if (!empty($datos['password_nueva'])) {
+            $query = "SELECT password FROM " . $this->table . " WHERE id_usuario = :id";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id', $datos['id']);
+            $stmt->execute();
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!password_verify($datos['password_actual'], $usuario['password'])) {
+                return [
+                    'success' => false,
+                    'mensaje' => 'La contraseña actual es incorrecta'
+                ];
+            }
+            
+            // Actualizar con nueva contraseña
+            $query = "UPDATE " . $this->table . " 
+                      SET nombre = :nombre, email = :email, telefono = :telefono, password = :password
+                      WHERE id_usuario = :id";
+            $stmt = $this->conn->prepare($query);
+            $passwordHash = password_hash($datos['password_nueva'], PASSWORD_DEFAULT);
+            $stmt->bindParam(':password', $passwordHash);
+        } else {
+            // Actualizar sin cambiar contraseña
+            $query = "UPDATE " . $this->table . " 
+                      SET nombre = :nombre, email = :email, telefono = :telefono
+                      WHERE id_usuario = :id";
+            $stmt = $this->conn->prepare($query);
+        }
+        
+        $stmt->bindParam(':nombre', $datos['nombre']);
+        $stmt->bindParam(':email', $datos['email']);
+        $stmt->bindParam(':telefono', $datos['telefono']);
+        $stmt->bindParam(':id', $datos['id']);
+        
+        if ($stmt->execute()) {
+            return ['success' => true];
+        }
+        
+        return ['success' => false, 'mensaje' => 'Error al actualizar perfil'];
+        
+    } catch (PDOException $e) {
+        return ['success' => false, 'mensaje' => 'Error: ' . $e->getMessage()];
+    }
+}
 
     // Obtener usuario por ID (ya existía)
     public function obtenerPorId($id) {

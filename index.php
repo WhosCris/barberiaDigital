@@ -4,19 +4,40 @@ require_once 'controller/loginController.php';
 require_once 'controller/registroController.php';
 require_once 'controller/reservaController.php';
 require_once 'controller/dashboardController.php';
+
 require_once 'controller/adminController.php';
+require_once 'controller/perfilController.php';
+
 
 $action = $_GET['action'] ?? 'mostrarDashboard';
 
 $controller = new adminController();
 switch($action) {
-    // === RUTA PRINCIPAL ===
+    // ===== DASHBOARD PRINCIPAL =====
     case 'mostrarDashboard':
         $controller = new dashboardController();
         $controller->mostrarDashboard();
         break;
     
-    // === RUTAS DE LOGIN ===
+    case 'mostrarMisReservas':
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: index.php?action=mostrarLogin');
+            exit;
+        }
+        $controller = new dashboardController();
+        $controller->mostrarMisReservas();
+        break;
+    
+    case 'cancelarReserva':
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: index.php?action=mostrarLogin');
+            exit;
+        }
+        $controller = new dashboardController();
+        $controller->cancelarReserva();
+        break;
+    
+    // ===== AUTENTICACIÓN =====
     case 'mostrarLogin':
         $controller = new loginController();
         $controller->mostrarFormularioLogin();
@@ -32,7 +53,7 @@ switch($action) {
         $controller->logout();
         break;
     
-    // === RUTAS DE REGISTRO ===
+    // ===== REGISTRO =====
     case 'mostrarRegistro':
         $controller = new registroController();
         $controller->mostrarFormularioRegistro();
@@ -43,7 +64,7 @@ switch($action) {
         $controller->procesarRegistro();
         break;
     
-    // === RUTAS DE RESERVA ===
+    // ===== RESERVAS =====
     case 'mostrarReserva':
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: index.php?action=mostrarLogin');
@@ -88,8 +109,38 @@ switch($action) {
         $controller->logoutAdmin();
         break;
 
+    
+    // ===== RUTA POR DEFECTO =====
     default:
         $controller = new dashboardController();
         $controller->mostrarDashboard();
+        break;
+
+    case 'mostrarPerfil':
+    if (!isset($_SESSION['usuario_id'])) {
+        header('Location: index.php?action=mostrarLogin');
+        exit;
+    }
+    $controller = new perfilController();
+    $controller->mostrarPerfil();
+    break;
+
+    case 'actualizarPerfil':
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: index.php?action=mostrarLogin');
+            exit;
+        }
+        $controller = new perfilController();
+        $controller->actualizarPerfil();
+        break;
+
+    case 'reprogramarCita':
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: index.php?action=mostrarLogin');
+            exit;
+        }
+        $controller = new perfilController();
+        $controller->reprogramarCita();
+        break;
 }
 ?>
