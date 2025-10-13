@@ -94,6 +94,14 @@
 
                     <button type="submit" class="submit-btn">SIGN UP</button>
                 </form>
+                <br>
+                <div class="admin-link">
+                    <p class="subtitle">
+                        ¿Eres administrador? 
+                    <a href="index.php?action=procesarLoginAdmin" class="link-login">Ingresa aquí</a>
+                    </p>
+                </div>
+
             </div>
         </div>
     </div>

@@ -82,6 +82,12 @@ class usuarioModel {
         }
     }
 
+    public function obtenerAdminPorEmail($email) {
+    $stmt = $this->conn->prepare("SELECT * FROM usuario WHERE email = :email AND id_tipo_usuario = 1 LIMIT 1");
+    $stmt->execute(['email' => $email]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     // Verificar si email existe (ya existía)
     public function emailExiste($email) {
         $query = "SELECT id_usuario FROM " . $this->table . " WHERE email = :email LIMIT 1";
