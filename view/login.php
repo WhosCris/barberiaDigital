@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="container">
-        <!-- Sección de imagen -->
+        
         <div class="image-section"></div>
 
         <!-- Sección del formulario -->

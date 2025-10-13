@@ -4,10 +4,14 @@ require_once 'controller/loginController.php';
 require_once 'controller/registroController.php';
 require_once 'controller/reservaController.php';
 require_once 'controller/dashboardController.php';
+
+require_once 'controller/adminController.php';
 require_once 'controller/perfilController.php';
+
 
 $action = $_GET['action'] ?? 'mostrarDashboard';
 
+$controller = new adminController();
 switch($action) {
     // ===== DASHBOARD PRINCIPAL =====
     case 'mostrarDashboard':
@@ -83,6 +87,28 @@ switch($action) {
         $controller = new reservaController();
         $controller->obtenerHorasDisponibles();
         break;
+
+    case 'mostrarLoginAdmin':
+        $controller->mostrarLoginAdmin();
+        break;
+
+    case 'procesarLoginAdmin':
+        $controller->procesarLoginAdmin();
+        break;
+
+    case 'adminDashboard':
+        // Validar sesión antes de mostrar dashboard
+        if (!isset($_SESSION['logged_in']) || $_SESSION['tipo_usuario'] != 1) {
+            header('Location: index.php?action=mostrarLoginAdmin');
+            exit;   
+        }
+        include 'view/adminDashboard.php';
+        break;
+
+    case 'logoutAdmin':
+        $controller->logoutAdmin();
+        break;
+
     
     // ===== RUTA POR DEFECTO =====
     default:
