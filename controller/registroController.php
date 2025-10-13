@@ -88,7 +88,7 @@ class registroController {
             $_SESSION['tipo_usuario'] = 2; // Cliente
 
             // Redirigir a reservas
-            header('Location: index.php?action=mostrarReserva');
+            header('Location: index.php?action=mostrarDashboard');
             exit;
         } else {
             $error = $resultado['mensaje'];
