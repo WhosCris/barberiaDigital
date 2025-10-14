@@ -60,7 +60,7 @@ class perfilController {
             $errores['email'] = 'Email no válido';
         }
 
-        // Verificar si el email ya existe (y no es el mismo usuario)
+        // Verificar si el email ya existe 
         if ($this->usuarioModel->emailExisteOtroUsuario($datos['email'], $datos['id'])) {
             $errores['email'] = 'Este email ya está registrado';
         }

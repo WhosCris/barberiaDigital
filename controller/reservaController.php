@@ -19,7 +19,7 @@ class reservaController {
         // 2️⃣ Recibir parámetros opcionales desde el dashboard
         $barberoSeleccionado = $_GET['barbero'] ?? null;
         $horaSeleccionada = $_GET['hora'] ?? null;
-        $fechaSeleccionada = $_GET['fecha'] ?? date('Y-m-d'); // si no viene, poner hoy
+        $fechaSeleccionada = $_GET['fecha'] ?? date('Y-m-d'); 
 
         // 3️⃣ Validar barbero
         if ($barberoSeleccionado && !in_array($barberoSeleccionado, array_column($barberos, 'id'))) {

@@ -8,7 +8,6 @@ class loginController {
         $this->usuarioModel = new usuarioModel();
     }
 
-    // Mostrar formulario de login
     public function mostrarFormularioLogin() {
         // Si ya está logueado, redirigir a reservas
         if (isset($_SESSION['usuario_id'])) {

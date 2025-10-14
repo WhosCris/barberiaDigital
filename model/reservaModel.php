@@ -79,7 +79,7 @@ class reservaModel {
         return $stmt->rowCount() === 0;
     }
 
-    // Crear reserva (el cliente se crea automáticamente si no existe)
+    // Crear reserva 
     public function crearReserva($datos) {
         try {
             $this->conn->beginTransaction();
@@ -154,7 +154,7 @@ class reservaModel {
         $servicios = $stmtServ->fetchAll(PDO::FETCH_COLUMN);
 
         if (empty($servicios)) {
-            return $horasLaborales; // Si no tiene servicios, todas están disponibles
+            return $horasLaborales;
         }
 
         // Obtener horas ocupadas

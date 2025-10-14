@@ -9,7 +9,7 @@ class adminController {
         $this->usuarioModel = new usuarioModel();
     }
 
-    // Mostrar formulario de login de admin
+    // Mostrar login de admin
     public function mostrarLoginAdmin() {
         include __DIR__ . '/../view/adminLogin.php';
     }
@@ -28,7 +28,7 @@ class adminController {
         $admin = $this->usuarioModel->obtenerAdminPorEmail($email);
 
         if ($admin && password_verify($password, $admin['password'])) {
-            $_SESSION['id_usuario'] = $admin['id_usuario']; // <- corregido
+            $_SESSION['id_usuario'] = $admin['id_usuario'];
             $_SESSION['nombre'] = $admin['nombre'];
             $_SESSION['apellido'] = $admin['apellido'] ?? '';
             $_SESSION['email'] = $admin['email'];

@@ -10,7 +10,7 @@ class usuarioModel {
         $this->conn = $database->getConnection();
     }
 
-    // Autenticar usuario (ya existía)
+    // Autenticar usuario
     public function autenticar($email, $password) {
         $query = "SELECT u.*, t.descripcion as tipo_descripcion 
                   FROM " . $this->table . " u
@@ -88,7 +88,7 @@ class usuarioModel {
     return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Verificar si email existe (ya existía)
+    // Verificar si email existe
     public function emailExiste($email) {
         $query = "SELECT id_usuario FROM " . $this->table . " WHERE email = :email LIMIT 1";
         $stmt = $this->conn->prepare($query);
@@ -157,7 +157,7 @@ public function actualizarPerfil($datos) {
     }
 }
 
-    // Obtener usuario por ID (ya existía)
+    // Obtener usuario por ID
     public function obtenerPorId($id) {
         $query = "SELECT u.*, t.descripcion as tipo_descripcion 
                   FROM " . $this->table . " u

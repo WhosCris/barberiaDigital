@@ -14,7 +14,6 @@ class dashboardController {
         $this->usuarioModel = new usuarioModel();
     }
 
-    // Mostrar dashboard principal
     public function mostrarDashboard() {
         // Obtener datos completos del usuario si está logueado
         $usuario = null;

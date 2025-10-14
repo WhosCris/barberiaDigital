@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const telefonoInput = document.getElementById('telefono');
     const passwordInput = document.getElementById('password');
 
-    // Limpiar errores al escribir
+    // Limpiar errores
     [nombreInput, emailInput, telefonoInput, passwordInput].forEach(input => {
         if (input) {
             input.addEventListener('input', function() {

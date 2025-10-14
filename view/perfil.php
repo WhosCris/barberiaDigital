@@ -102,7 +102,7 @@
                         </div>
                     </div>
 
-                    <!-- Sección cambiar contraseña (colapsable) -->
+                    <!-- Sección cambiar contraseña -->
                     <div class="password-section">
                         <button type="button" class="btn-toggle-password" onclick="togglePasswordFields()">
                             Cambiar contraseña
