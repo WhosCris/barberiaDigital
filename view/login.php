@@ -58,6 +58,7 @@
 
                 <div class="footer-text">
                     <p>¿No tienes cuenta? <a href="index.php?action=mostrarRegistro">Regístrate aquí</a></p>
+                    
                 </div>
             </div>
         </div>

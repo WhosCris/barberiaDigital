@@ -4,7 +4,7 @@ require_once 'controller/loginController.php';
 require_once 'controller/registroController.php';
 require_once 'controller/reservaController.php';
 require_once 'controller/dashboardController.php';
-
+require_once 'controller/registroAdminController.php';
 require_once 'controller/adminController.php';
 require_once 'controller/perfilController.php';
 
@@ -141,6 +141,24 @@ switch($action) {
         }
         $controller = new perfilController();
         $controller->reprogramarCita();
+        break;
+
+    case 'mostrarRegistroAdmin':
+        if (!isset($_SESSION['usuario_id']) || $_SESSION['tipo_usuario'] != 1) {
+            header('Location: index.php?action=mostrarLogin');
+            exit;
+        }
+        $controller = new registroAdminController();
+        $controller->mostrarFormularioRegistroAdmin();
+        break;
+
+    case 'procesarRegistroAdmin':
+        if (!isset($_SESSION['usuario_id']) || $_SESSION['tipo_usuario'] != 1) {
+            header('Location: index.php?action=mostrarLogin');
+            exit;
+        }
+        $controller = new registroAdminController();
+        $controller->procesarRegistroAdmin();
         break;
 }
 ?>

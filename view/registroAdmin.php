@@ -3,80 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Barbería Online</title>
-    <link rel="stylesheet" href="assets/css/login.css">
-    <style>
-        .admin-badge {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        h1 {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-    </style>
+    <title>Registrar Administrador - Barbería Elegante</title>
+    <link rel="stylesheet" href="assets/css/registro-admin.css">
 </head>
 <body>
     <div class="container">
-        <div class="image-section"></div>
+        <!-- Sección izquierda - Branding -->
+        <div class="brand-section">
+            <div class="brand-content">
+                <h1 class="brand-title">Barbería Elegante</h1>
+                <p class="brand-subtitle">Tu estilo, nuestra pasión</p>
+            </div>
+        </div>
 
+        <!-- Sección derecha - Formulario -->
         <div class="form-section">
             <div class="form-container">
-                <div class="admin-badge">🔐 Administrador</div>
-                <h1>Admin Panel</h1>
-                <p class="subtitle">Acceso exclusivo para administradores</p>
+                <h1>Hola, <?php echo htmlspecialchars(explode(' ', $_SESSION['nombre'])[0]); ?></h1>
+                <p class="subtitle">Completa los siguientes campos para registrar un nuevo admin</p>
+
+                <!-- Mensajes -->
+                <?php if(isset($_SESSION['mensaje_exito'])): ?>
+                    <div class="success-message">
+                        <?php 
+                        echo $_SESSION['mensaje_exito']; 
+                        unset($_SESSION['mensaje_exito']);
+                        ?>
+                    </div>
+                <?php endif; ?>
 
                 <?php if(isset($error)): ?>
-                    <div class="error-message show">
+                    <div class="error-message">
                         <?php echo htmlspecialchars($error); ?>
                     </div>
                 <?php endif; ?>
 
-                <form method="POST" action="index.php?action=procesarLoginAdmin">
+                <!-- Formulario -->
+                <form id="registroAdminForm" method="POST" action="index.php?action=procesarRegistroAdmin">
                     <div class="form-group">
-                        <label for="email">Email de Administrador</label>
+                        <input 
+                            type="text" 
+                            id="nombre" 
+                            name="nombre" 
+                            placeholder="Nombre completo"
+                            value="<?php echo isset($datos['nombre']) ? htmlspecialchars($datos['nombre']) : ''; ?>"
+                            required
+                        >
+                        <?php if(isset($errores['nombre'])): ?>
+                            <div class="error-text"><?php echo $errores['nombre']; ?></div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="form-group">
                         <input 
                             type="email" 
                             id="email" 
                             name="email" 
-                            placeholder="admin@barberia.com"
+                            placeholder="Correo electrónico"
+                            value="<?php echo isset($datos['email']) ? htmlspecialchars($datos['email']) : ''; ?>"
                             required
-                            autofocus
                         >
+                        <?php if(isset($errores['email'])): ?>
+                            <div class="error-text"><?php echo $errores['email']; ?></div>
+                        <?php endif; ?>
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Contraseña</label>
+                        <input 
+                            type="tel" 
+                            id="telefono" 
+                            name="telefono" 
+                            placeholder="Teléfono"
+                            value="<?php echo isset($datos['telefono']) ? htmlspecialchars($datos['telefono']) : ''; ?>"
+                            required
+                        >
+                        <?php if(isset($errores['telefono'])): ?>
+                            <div class="error-text"><?php echo $errores['telefono']; ?></div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="form-group">
                         <input 
                             type="password" 
                             id="password" 
                             name="password" 
-                            placeholder="******"
+                            placeholder="Contraseña"
                             required
                         >
+                        <?php if(isset($errores['password'])): ?>
+                            <div class="error-text"><?php echo $errores['password']; ?></div>
+                        <?php endif; ?>
                     </div>
 
-                    <button type="submit" class="submit-btn" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        INGRESAR AL PANEL
-                    </button>
+                    <button type="submit" class="btn-submit">Registrar</button>
                 </form>
 
-                <div class="footer-text" style="margin-top: 20px;">
-                    <p><a href="index.php?action=mostrarLogin">← Volver al login normal</a></p>
+                <div class="footer-links">
+                    <a href="index.php" class="link-volver">Volver al inicio</a>
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="assets/js/registro-admin.js"></script>
 </body>
 </html>

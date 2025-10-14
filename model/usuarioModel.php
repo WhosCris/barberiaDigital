@@ -171,5 +171,42 @@ public function actualizarPerfil($datos) {
         
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    // Registrar nuevo administrador
+public function registrarAdministrador($datos) {
+    try {
+        $query = "INSERT INTO " . $this->table . " 
+                  (nombre, email, password, telefono, id_tipo_usuario, id_peluqueria, estado) 
+                  VALUES (:nombre, :email, :password, :telefono, 1, 1, 'activo')";
+        
+        $stmt = $this->conn->prepare($query);
+        
+        // Encriptar contraseña
+        $passwordHash = password_hash($datos['password'], PASSWORD_DEFAULT);
+        
+        $stmt->bindParam(':nombre', $datos['nombre']);
+        $stmt->bindParam(':email', $datos['email']);
+        $stmt->bindParam(':password', $passwordHash);
+        $stmt->bindParam(':telefono', $datos['telefono']);
+        
+        if ($stmt->execute()) {
+            return [
+                'success' => true,
+                'id' => $this->conn->lastInsertId()
+            ];
+        }
+        
+        return [
+            'success' => false,
+            'mensaje' => 'Error al registrar administrador'
+        ];
+        
+    } catch (PDOException $e) {
+        return [
+            'success' => false,
+            'mensaje' => 'Error: ' . $e->getMessage()
+        ];
+    }
+}
 }
 ?>
