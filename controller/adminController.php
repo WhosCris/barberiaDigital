@@ -1,6 +1,10 @@
 <?php
 
 require_once 'model/usuarioModel.php';
+// Verifica que el archivo existe y la clase está definida
+if (!class_exists('usuarioModel')) {
+    die('Error: No se encontró la clase usuarioModel. Verifica el archivo usuarioModel.php.');
+}
 
 class adminController {
     private $usuarioModel;
@@ -11,7 +15,7 @@ class adminController {
 
     // Mostrar login de admin
     public function mostrarLoginAdmin() {
-        include __DIR__ . '/../view/adminLogin.php';
+        include "view/adminLogin.php";
     }
 
     // Procesar login de admin
@@ -39,7 +43,7 @@ class adminController {
             exit;
         } else {
             $error = "Email o contraseña incorrectos";
-            include __DIR__ . '/../view/adminLogin.php';
+            include 'view/adminLogin.php';
         }
     }
 

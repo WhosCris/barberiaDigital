@@ -1,4 +1,4 @@
-<?php
+<?php 
 require_once 'model/barberoModel.php';
 require_once 'model/reservaModel.php';
 require_once 'model/usuarioModel.php';

@@ -1,13 +1,6 @@
 <?php
 session_start();
-require_once 'controller/loginController.php';
-require_once 'controller/registroController.php';
-require_once 'controller/reservaController.php';
-require_once 'controller/dashboardController.php';
-require_once 'controller/registroAdminController.php';
-require_once 'controller/adminController.php';
-require_once 'controller/perfilController.php';
-
+require_once 'autoload.php';
 
 $action = $_GET['action'] ?? 'mostrarDashboard';
 
