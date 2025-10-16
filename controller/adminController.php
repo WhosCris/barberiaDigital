@@ -1,24 +1,21 @@
 <?php
-
-require_once 'model/usuarioModel.php';
-// Verifica que el archivo existe y la clase está definida
-if (!class_exists('usuarioModel')) {
-    die('Error: No se encontró la clase usuarioModel. Verifica el archivo usuarioModel.php.');
-}
+require_once 'model/Factories/usuarioFactory.php';
+require_once 'config/database.php';
 
 class adminController {
-    private $usuarioModel;
+    private $usuarioFactory;
 
     public function __construct() {
-        $this->usuarioModel = new usuarioModel();
+        $db = new Database();
+        $this->usuarioFactory = new usuarioFactory($db->getConnection());
     }
 
-    // Mostrar login de admin
+    // Muestra la vista de login del administrador
     public function mostrarLoginAdmin() {
         include "view/adminLogin.php";
     }
 
-    // Procesar login de admin
+    // Valida las credenciales del administrador
     public function procesarLoginAdmin() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: index.php?action=mostrarLoginAdmin');
@@ -28,26 +25,25 @@ class adminController {
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
 
-        // Traer el admin de la tabla usuarios
-        $admin = $this->usuarioModel->obtenerAdminPorEmail($email);
+        try {
+            $adminObjeto = $this->usuarioFactory->obtenerUsuarioPorEmailYRol($email, 'admin');
 
-        if ($admin && password_verify($password, $admin['password'])) {
-            $_SESSION['id_usuario'] = $admin['id_usuario'];
-            $_SESSION['nombre'] = $admin['nombre'];
-            $_SESSION['apellido'] = $admin['apellido'] ?? '';
-            $_SESSION['email'] = $admin['email'];
-            $_SESSION['tipo_usuario'] = 1; // admin
-            $_SESSION['logged_in'] = true;
-
-            header('Location: index.php?action=adminDashboard');
-            exit;
-        } else {
-            $error = "Email o contraseña incorrectos";
+            if ($adminObjeto && password_verify($password, $adminObjeto->getPassword())) {
+                $adminObjeto->login();
+                $_SESSION['tipo_usuario'] = 1; // Identifica al usuario como admin
+                header('Location: index.php?action=adminDashboard');
+                exit;
+            } else {
+                $error = "Email o contraseña incorrectos";
+                include 'view/adminLogin.php';
+            }
+        } catch (Exception $e) {
+            $error = "Error en el sistema: " . $e->getMessage();
             include 'view/adminLogin.php';
         }
     }
 
-    // Logout
+    // Cierra la sesión del administrador
     public function logoutAdmin() {
         session_start();
         session_unset();

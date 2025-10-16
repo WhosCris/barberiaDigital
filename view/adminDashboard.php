@@ -1,4 +1,5 @@
 <?php 
+// Obtener datos del administrador desde la sesión
 $nombre   = $_SESSION['nombre'] ?? '';
 $apellido = $_SESSION['apellido'] ?? '';
 $email    = $_SESSION['email'] ?? '';
@@ -10,11 +11,25 @@ $email    = $_SESSION['email'] ?? '';
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard - Barbería Online</title>
-<style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-    body { display: flex; min-height: 100vh; background: #ecf0f1; }
 
-    /* Sidebar */
+<!-- Estilos internos del dashboard -->
+<style>
+    /* Reset general */
+    * { 
+        margin: 0; 
+        padding: 0; 
+        box-sizing: border-box; 
+        font-family: Arial, sans-serif; 
+    }
+
+    /* Estilo del body y layout principal */
+    body { 
+        display: flex; 
+        min-height: 100vh; 
+        background: #ecf0f1; 
+    }
+
+    /* ===================== SIDEBAR ===================== */
     .sidebar {
         width: 220px;
         background: #2c3e50;
@@ -23,7 +38,13 @@ $email    = $_SESSION['email'] ?? '';
         flex-direction: column;
         padding: 20px;
     }
-    .sidebar h2 { margin-bottom: 20px; }
+
+    /* Título del sidebar */
+    .sidebar h2 { 
+        margin-bottom: 20px; 
+    }
+
+    /* Links del sidebar */
     .sidebar a {
         color: white;
         text-decoration: none;
@@ -32,16 +53,18 @@ $email    = $_SESSION['email'] ?? '';
         padding: 10px;
         border-radius: 5px;
     }
-    .sidebar a:hover { background: #34495e; }
+    .sidebar a:hover { 
+        background: #34495e; 
+    }
 
-    /* Área principal */
+    /* ===================== ÁREA PRINCIPAL ===================== */
     .main-area {
         flex: 1;
         display: flex;
         flex-direction: column;
     }
 
-    /* Header */
+    /* Header del área principal */
     .header {
         background: #667eea;
         color: white;
@@ -53,14 +76,14 @@ $email    = $_SESSION['email'] ?? '';
     .header span { font-weight: bold; }
     .header a { color: white; text-decoration: none; font-weight: bold; }
 
-    /* Contenido principal */
+    /* Contenido principal con scroll si es necesario */
     .main-content {
         flex: 1;
         padding: 20px;
         overflow-y: auto;
     }
 
-    /* Tarjetas */
+    /* ===================== TARJETAS ===================== */
     .card {
         background: white;
         padding: 20px;
@@ -71,6 +94,8 @@ $email    = $_SESSION['email'] ?? '';
 </style>
 </head>
 <body>
+
+    <!-- ===================== SIDEBAR ===================== -->
     <div class="sidebar">
         <h2>Panel Admin</h2>
         <a href="#">Inicio</a>
@@ -79,21 +104,27 @@ $email    = $_SESSION['email'] ?? '';
         <a href="#">Configuración</a>
     </div>
 
+    <!-- ===================== ÁREA PRINCIPAL ===================== -->
     <div class="main-area">
+
+        <!-- Header con nombre del admin y link de logout -->
         <div class="header">
-            <span><?php echo htmlspecialchars($nombre); ?></span>
+            <span><?php echo htmlspecialchars($nombre); ?> <?php echo htmlspecialchars($apellido); ?></span>
             <a href="index.php?action=logoutAdmin">Cerrar sesión</a>
         </div>
 
+        <!-- Contenido principal -->
         <div class="main-content">
             <h1>Bienvenido al Panel de Administración</h1>
             <p>Email: <?php echo htmlspecialchars($email); ?></p>
 
+            <!-- Tarjeta de estadísticas -->
             <div class="card">
                 <h3>Estadísticas</h3>
                 <p>Aquí puedes mostrar datos importantes del sistema.</p>
             </div>
 
+            <!-- Tarjeta de acciones rápidas -->
             <div class="card">
                 <h3>Acciones Rápidas</h3>
                 <ul>
@@ -104,5 +135,6 @@ $email    = $_SESSION['email'] ?? '';
             </div>
         </div>
     </div>
+
 </body>
 </html>

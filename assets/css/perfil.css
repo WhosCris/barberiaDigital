@@ -1,26 +1,16 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #f8f9fa;
-    min-height: 100vh;
-}
-
+/* Contenedor principal de la página de Perfil */
 .perfil-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 40px 20px;
 }
 
-/* Header */
+/* Header de la página con margen inferior */
 .perfil-header {
     margin-bottom: 30px;
 }
 
+/* Botón para volver a la página anterior */
 .btn-back {
     background: white;
     color: #374151;
@@ -39,14 +29,14 @@ body {
     color: #2563eb;
 }
 
-/* Layout principal */
+/* Layout principal: dos columnas */
 .perfil-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
 }
 
-/* Columna izquierda */
+/* Columna izquierda: información del usuario */
 .perfil-left {
     background: white;
     border-radius: 16px;
@@ -54,11 +44,13 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
+/* Tarjeta del usuario */
 .user-card {
     text-align: center;
     margin-bottom: 40px;
 }
 
+/* Avatar grande del usuario */
 .user-avatar-large {
     width: 150px;
     height: 150px;
@@ -74,6 +66,7 @@ body {
     position: relative;
 }
 
+/* Botón para editar avatar */
 .avatar-edit {
     position: absolute;
     bottom: 5px;
@@ -98,7 +91,7 @@ body {
     color: #1f2937;
 }
 
-/* Mensajes */
+/* Mensajes de éxito y error */
 .success-message {
     background: #d1fae5;
     color: #065f46;
@@ -117,13 +110,14 @@ body {
     border: 1px solid #fca5a5;
 }
 
-/* Formulario */
+/* Formulario de perfil */
 .perfil-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
+/* Campos de formulario */
 .form-group {
     display: flex;
     flex-direction: column;
@@ -155,6 +149,7 @@ body {
     cursor: not-allowed;
 }
 
+/* Filas de formulario con dos columnas */
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -167,11 +162,12 @@ body {
     margin-top: 5px;
 }
 
-/* Sección de contraseña */
+/* Sección de cambio de contraseña */
 .password-section {
     margin-top: 10px;
 }
 
+/* Botón para mostrar/ocultar contraseña */
 .btn-toggle-password {
     background: transparent;
     color: #2563eb;
@@ -188,6 +184,7 @@ body {
     text-decoration: underline;
 }
 
+/* Campos de contraseña adicionales */
 .password-fields {
     margin-top: 20px;
     padding-top: 20px;
@@ -197,6 +194,7 @@ body {
     gap: 15px;
 }
 
+/* Botón de guardar cambios */
 .btn-save {
     background: #2563eb;
     color: white;
@@ -218,7 +216,7 @@ body {
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
-/* Columna derecha - Citas */
+/* Columna derecha: lista de citas */
 .perfil-right {
     background: white;
     border-radius: 16px;
@@ -232,6 +230,7 @@ body {
     margin-bottom: 25px;
 }
 
+/* Lista de citas */
 .citas-list {
     display: flex;
     flex-direction: column;
@@ -239,6 +238,7 @@ body {
     margin-bottom: 25px;
 }
 
+/* Tarjeta individual de cita */
 .cita-card {
     border: 2px solid #e5e7eb;
     border-radius: 12px;
@@ -251,12 +251,14 @@ body {
     box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
 }
 
+/* Fecha de la cita */
 .cita-date {
     font-size: 16px;
     color: #2563eb;
     margin-bottom: 12px;
 }
 
+/* Información de la cita */
 .cita-info h3 {
     font-size: 18px;
     color: #1f2937;
@@ -268,12 +270,14 @@ body {
     font-size: 14px;
 }
 
+/* Botones de acción de la cita */
 .cita-actions {
     display: flex;
     gap: 10px;
     margin-top: 15px;
 }
 
+/* Botón pequeño de cancelar cita */
 .btn-cancel-small {
     flex: 1;
     background: white;
@@ -292,6 +296,7 @@ body {
     color: white;
 }
 
+/* Botón de reprogramar cita */
 .btn-reprogramar {
     flex: 1;
     background: #2563eb;
@@ -309,6 +314,7 @@ body {
     background: #1d4ed8;
 }
 
+/* Botón para ver todas las citas */
 .btn-ver-todas {
     display: block;
     text-align: center;
@@ -325,6 +331,7 @@ body {
     background: #eff6ff;
 }
 
+/* Mensaje cuando no hay citas */
 .no-citas {
     text-align: center;
     padding: 60px 20px;
@@ -336,6 +343,7 @@ body {
     margin-bottom: 25px;
 }
 
+/* Botón primario general */
 .btn-primary {
     display: inline-block;
     background: #2563eb;
@@ -352,7 +360,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* Responsive */
+/* Responsive: ajustes para tablet y móvil */
 @media (max-width: 968px) {
     .perfil-content {
         grid-template-columns: 1fr;

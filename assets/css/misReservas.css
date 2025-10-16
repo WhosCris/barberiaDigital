@@ -1,10 +1,11 @@
-/* Estilos para la página de Mis Reservas */
+/* Contenedor principal de la página "Mis Reservas" */
 .reservas-container {
     max-width: 1000px;
     margin: 0 auto;
     padding: 40px 20px;
 }
 
+/* Header de la sección con título y botón de regreso */
 .reservas-header {
     display: flex;
     align-items: center;
@@ -12,6 +13,7 @@
     margin-bottom: 40px;
 }
 
+/* Botón para volver a la página anterior */
 .btn-back {
     background: #f3f4f6;
     color: #374151;
@@ -26,19 +28,21 @@
     background: #e5e7eb;
 }
 
+/* Título principal de la página */
 .reservas-header h1 {
     font-size: 32px;
     font-weight: 700;
     color: #1f2937;
 }
 
-/* Lista de reservas */
+/* Lista que contiene todas las reservas */
 .reservas-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
+/* Tarjeta individual de reserva */
 .reserva-card {
     background: white;
     border: 2px solid #e5e7eb;
@@ -51,10 +55,12 @@
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
+/* Reserva pasada atenuada */
 .reserva-card.pasada {
     opacity: 0.6;
 }
 
+/* Estado de la reserva */
 .reserva-status {
     display: flex;
     align-items: center;
@@ -64,6 +70,7 @@
     font-weight: 600;
 }
 
+/* Colores según el estado de la reserva */
 .reserva-card.estado-confirmada .status-text {
     color: #059669;
 }
@@ -80,6 +87,7 @@
     color: #6b7280;
 }
 
+/* Detalles de la reserva organizados en grid */
 .reserva-details {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -87,6 +95,7 @@
     align-items: center;
 }
 
+/* Fecha y hora de la reserva */
 .reserva-date {
     display: flex;
     flex-direction: column;
@@ -98,6 +107,7 @@
     color: #6b7280;
 }
 
+/* Servicio reservado */
 .reserva-service h3 {
     font-size: 18px;
     font-weight: 700;
@@ -111,12 +121,14 @@
     margin-bottom: 4px;
 }
 
+/* Precio del servicio */
 .reserva-price {
     font-size: 28px;
     font-weight: 700;
     color: #2563eb;
 }
 
+/* Contenedor de botones de acción de la reserva */
 .reserva-actions {
     margin-top: 20px;
     padding-top: 20px;
@@ -124,6 +136,7 @@
     text-align: right;
 }
 
+/* Botón para cancelar la reserva */
 .btn-cancel {
     background: #dc2626;
     color: white;
@@ -140,6 +153,7 @@
     transform: translateY(-2px);
 }
 
+/* Mensaje cuando no hay reservas */
 .no-reservas {
     text-align: center;
     padding: 80px 20px;
@@ -151,7 +165,7 @@
     margin-bottom: 30px;
 }
 
-/* Responsive */
+/* Responsive: ajustes para tablet y móvil */
 @media (max-width: 768px) {
     .reserva-details {
         grid-template-columns: 1fr;

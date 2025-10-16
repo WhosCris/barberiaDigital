@@ -12,32 +12,31 @@ class reservaController {
     }
 
     public function mostrarFormularioReserva() {
-        // 1️⃣ Obtener barberos y servicios para mostrar en el formulario
+        // Obtener barberos y servicios para el formulario
         $barberos = $this->barberoModel->obtenerBarberos();
         $servicios = $this->barberoModel->obtenerServicios();
 
-        // 2️⃣ Recibir parámetros opcionales desde el dashboard
+        // Recibir parámetros opcionales desde el dashboard
         $barberoSeleccionado = $_GET['barbero'] ?? null;
         $horaSeleccionada = $_GET['hora'] ?? null;
         $fechaSeleccionada = $_GET['fecha'] ?? date('Y-m-d'); 
 
-        // 3️⃣ Validar barbero
+        // Validar barbero
         if ($barberoSeleccionado && !in_array($barberoSeleccionado, array_column($barberos, 'id'))) {
-            $barberoSeleccionado = null; // inválido, ignorar
+            $barberoSeleccionado = null;
         }
 
-        // 4️⃣ Validar hora
+        // Validar hora
         if ($horaSeleccionada) {
             $horaValida = DateTime::createFromFormat('H:i:s', $horaSeleccionada) 
                          ?: DateTime::createFromFormat('H:i', $horaSeleccionada);
             if (!$horaValida) $horaSeleccionada = null;
         }
 
-        // 5️⃣ Validar fecha
+        // Validar fecha
         $fechaValida = DateTime::createFromFormat('Y-m-d', $fechaSeleccionada);
         if (!$fechaValida) $fechaSeleccionada = date('Y-m-d');
 
-        // 6️⃣ Incluir la vista
         include 'view/reserva.php';
     }
 
@@ -58,7 +57,7 @@ class reservaController {
 
         $errores = [];
 
-        // Validaciones
+        // Validar cada campo usando métodos del modelo
         $validaciones = [
             'barbero_id' => $this->reservaModel->validarBarbero($datos['barbero_id']),
             'servicio_id' => $this->reservaModel->validarServicio($datos['servicio_id']),
@@ -74,6 +73,7 @@ class reservaController {
             }
         }
 
+        // Si hay errores, recarga el formulario
         if (!empty($errores)) {
             $barberos = $this->barberoModel->obtenerBarberos();
             $servicios = $this->barberoModel->obtenerServicios();
@@ -81,6 +81,7 @@ class reservaController {
             return;
         }
 
+        // Crear la reserva
         $resultado = $this->reservaModel->crearReserva($datos);
 
         $barberos = $this->barberoModel->obtenerBarberos();

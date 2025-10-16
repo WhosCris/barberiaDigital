@@ -4,6 +4,7 @@ require_once __DIR__ . '/../Administrador.php';
 
 class AdminFactory extends UsuarioFactory {
     
+    // Crear un nuevo administrador en la base de datos
     public function crearUsuario($datos) {
         $query = "INSERT INTO usuario 
                   (nombre, email, password, telefono, id_tipo_usuario, id_peluqueria, estado) 
@@ -26,6 +27,7 @@ class AdminFactory extends UsuarioFactory {
         return null;
     }
     
+    // Crear perfil de administrador sin datos
     public function crearPerfil() {
         return new Administrador($this->conn);
     }

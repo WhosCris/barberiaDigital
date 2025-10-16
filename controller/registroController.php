@@ -8,9 +8,8 @@ class registroController {
         $this->usuarioModel = new usuarioModel();
     }
 
-    // Mostrar formulario de registro
     public function mostrarFormularioRegistro() {
-        // Si ya está logueado, redirigir a reservas
+        // Si ya está logueado, redirige al dashboard
         if (isset($_SESSION['usuario_id'])) {
             header('Location: index.php?action=mostrarDashboard');
             exit;
@@ -18,7 +17,6 @@ class registroController {
         include 'view/registro.php';
     }
 
-    // Procesar registro
     public function procesarRegistro() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: index.php?action=mostrarRegistro');
@@ -35,14 +33,13 @@ class registroController {
 
         $errores = [];
 
-        // Validar nombre
+        // Validaciones básicas
         if (empty(trim($datos['nombre']))) {
             $errores['nombre'] = 'El nombre es obligatorio';
         } elseif (strlen(trim($datos['nombre'])) < 2) {
             $errores['nombre'] = 'El nombre debe tener al menos 2 caracteres';
         }
 
-        // Validar email
         if (empty($datos['email'])) {
             $errores['email'] = 'El email es obligatorio';
         } elseif (!filter_var($datos['email'], FILTER_VALIDATE_EMAIL)) {
@@ -51,17 +48,16 @@ class registroController {
             $errores['email'] = 'Este email ya está registrado';
         }
 
-        // Validar password
         if (empty($datos['password'])) {
             $errores['password'] = 'La contraseña es obligatoria';
         } elseif (strlen($datos['password']) < 6) {
             $errores['password'] = 'La contraseña debe tener al menos 6 caracteres';
         }
 
-        // Validar fecha de nacimiento
         if (empty($datos['fecha_nacimiento'])) {
             $errores['fecha_nacimiento'] = 'La fecha de nacimiento es obligatoria';
         } else {
+            // Verifica que el usuario tenga al menos 13 años
             $fecha_nac = new DateTime($datos['fecha_nacimiento']);
             $hoy = new DateTime();
             $edad = $hoy->diff($fecha_nac)->y;
@@ -71,7 +67,7 @@ class registroController {
             }
         }
 
-        // Si hay errores, volver al formulario
+        // Si hay errores, recarga el formulario
         if (!empty($errores)) {
             include 'view/registro.php';
             return;
@@ -87,7 +83,6 @@ class registroController {
             $_SESSION['email'] = $datos['email'];
             $_SESSION['tipo_usuario'] = 2; // Cliente
 
-            // Redirigir a reservas
             header('Location: index.php?action=mostrarDashboard');
             exit;
         } else {

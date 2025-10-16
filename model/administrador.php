@@ -8,6 +8,7 @@ require_once 'interfaces/IProfile.php';
  */
 class Administrador extends Usuario implements IProfile {
     
+    // Actualiza el perfil del administrador
     public function actualizarPerfil() {
         $query = "UPDATE usuario 
                   SET nombre = :nombre, email = :email, telefono = :telefono
@@ -42,7 +43,7 @@ class Administrador extends Usuario implements IProfile {
         return $this->actualizarPerfil();
     }
     
-    // Métodos específicos de Administrador
+    // Registrar un profesional (barbero)
     public function registrarProfesional($datos) {
         $query = "INSERT INTO usuario 
                   (nombre, email, password, telefono, id_tipo_usuario, id_peluqueria, estado) 
@@ -59,6 +60,7 @@ class Administrador extends Usuario implements IProfile {
         return $stmt->execute();
     }
     
+    // Desactivar un profesional
     public function eliminarProfesional($idProfesional) {
         $query = "UPDATE usuario SET estado = 'inactivo' 
                   WHERE id_usuario = :id AND id_tipo_usuario = 3";
@@ -67,13 +69,15 @@ class Administrador extends Usuario implements IProfile {
         return $stmt->execute();
     }
     
+    // Gestionar horarios de un barbero
     public function gestionarHorarios($idBarbero, $horarios) {
-        // Lógica para gestionar horarios
+        // Lógica pendiente
         return true;
     }
     
+    // Gestionar servicios
     public function gestionarServicios($operacion, $datos) {
-        // Lógica para gestionar servicios
+        // Lógica pendiente
         return true;
     }
 }

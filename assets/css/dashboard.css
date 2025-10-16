@@ -1,21 +1,24 @@
+/* Reset de márgenes, padding y box-sizing */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Estilos generales del body: fuente y color de fondo */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: #f5f5f5;
     min-height: 100vh;
 }
 
+/* Contenedor principal en flex, altura mínima igual a la pantalla */
 .container {
     display: flex;
     min-height: 100vh;
 }
 
-/* Sección izquierda - Hero */
+/* Sección izquierda: hero con imagen de fondo y overlay */
 .hero-section {
     flex: 0 0 40%;
     background: linear-gradient(135deg, rgba(44, 90, 160, 0.9), rgba(30, 66, 120, 0.9)),
@@ -27,6 +30,7 @@ body {
     overflow-y: hidden;
 }
 
+/* Overlay interno del hero */
 .hero-overlay {
     text-align: center;
     color: white;
@@ -37,6 +41,7 @@ body {
     min-height: 100vh;
 }
 
+/* Título del hero */
 .hero-title {
     font-size: 48px;
     font-weight: 700;
@@ -44,12 +49,13 @@ body {
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
+/* Subtítulo del hero */
 .hero-subtitle {
     font-size: 20px;
     opacity: 0.95;
 }
 
-/* Sección derecha - Contenido */
+/* Sección derecha: contenido principal */
 .content-section {
     flex: 1;
     padding: 40px 60px;
@@ -57,7 +63,7 @@ body {
     background: white;
 }
 
-/* Header */
+/* Header con saludo y acciones */
 .header {
     display: flex;
     justify-content: space-between;
@@ -65,27 +71,28 @@ body {
     margin-bottom: 40px;
 }
 
+/* Contenedor de botones en header */
 .header-actions {
     display: flex;
     gap: 15px;
-    margin-left: auto; /* 👈 empuja los botones al extremo derecho */
-
     margin-left: auto;
-    margin-right: 20px; /* opcional */
+    margin-right: 20px;
 }
 
-
+/* Saludo principal */
 .greeting h1 {
     font-size: 36px;
     font-weight: 600;
     color: #333;
 }
 
+/* Botones de autenticación */
 .auth-buttons {
     display: flex;
     gap: 15px;
 }
 
+/* Botón genérico */
 .btn {
     padding: 12px 28px;
     border-radius: 8px;
@@ -99,6 +106,7 @@ body {
     cursor: pointer;
 }
 
+/* Botón principal */
 .btn-primary {
     background: #2c5aa0;
     color: white;
@@ -110,6 +118,7 @@ body {
     box-shadow: 0 4px 12px rgba(44, 90, 160, 0.3);
 }
 
+/* Botón secundario */
 .btn-secondary {
     background: white;
     color: #2c5aa0;
@@ -120,6 +129,7 @@ body {
     background: #f0f4f9;
 }
 
+/* Botón de logout */
 .btn-logout {
     background: #dc3545;
     color: white;
@@ -130,7 +140,7 @@ body {
     transform: translateY(-2px);
 }
 
-/* Próxima cita */
+/* Tarjeta de próxima cita */
 .next-appointment {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 12px;
@@ -143,10 +153,12 @@ body {
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
+/* Icono dentro de la cita */
 .appointment-icon {
     font-size: 40px;
 }
 
+/* Detalles de la cita */
 .appointment-details h3 {
     font-size: 14px;
     font-weight: 500;
@@ -160,6 +172,7 @@ body {
     margin-bottom: 10px;
 }
 
+/* Barber asignado */
 .appointment-barber {
     display: flex;
     align-items: center;
@@ -171,7 +184,7 @@ body {
     font-size: 18px;
 }
 
-/* Formulario rápido */
+/* Formulario rápido de reservas */
 .quick-booking {
     margin-bottom: 40px;
 }
@@ -201,7 +214,7 @@ body {
     margin-top: 10px;
 }
 
-/* Grid de horarios */
+/* Grid de horarios disponibles */
 .schedules-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -209,6 +222,7 @@ body {
     margin-top: 30px;
 }
 
+/* Tarjeta de horario individual */
 .schedule-card {
     background: white;
     border: 2px solid #e0e0e0;
@@ -224,6 +238,7 @@ body {
     transform: translateY(-2px);
 }
 
+/* Hora del horario */
 .schedule-time {
     font-size: 22px;
     font-weight: 700;
@@ -231,12 +246,14 @@ body {
     margin-bottom: 10px;
 }
 
+/* Barber asignado en el horario */
 .schedule-barber {
     color: #666;
     font-size: 15px;
     margin-bottom: 20px;
 }
 
+/* Botón de reservar horario */
 .btn-reservar {
     display: inline-block;
     background: #2c5aa0;
@@ -253,6 +270,7 @@ body {
     transform: scale(1.05);
 }
 
+/* Mensaje cuando no hay horarios */
 .no-schedules {
     grid-column: 1 / -1;
     text-align: center;
@@ -261,7 +279,7 @@ body {
     font-size: 16px;
 }
 
-/* Responsive */
+/* Responsive: tablet y menor */
 @media (max-width: 1024px) {
     .container {
         flex-direction: column;
@@ -286,6 +304,7 @@ body {
     }
 }
 
+/* Responsive: móvil */
 @media (max-width: 640px) {
     .greeting h1 {
         font-size: 28px;

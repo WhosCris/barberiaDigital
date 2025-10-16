@@ -1,13 +1,12 @@
 <?php
 require_once 'interfaces/IUsuario.php';
 
-
- /* Base para todos los tipos de usuario del sistema */
+/* Base para todos los tipos de usuario del sistema */
 abstract class Usuario implements IUsuario {
     protected $id;
     protected $nombre;
     protected $email;
-    protected $password;
+    protected $password; // <-- Hash de la contraseña
     protected $telefono;
     protected $conn;
     
@@ -21,38 +20,36 @@ abstract class Usuario implements IUsuario {
             $this->telefono = $datos['telefono'] ?? '';
         }
     }
-    
-    // Implementación de métodos de IUsuario
-    public function login() {
-        if (!isset($_SESSION)) {
-            session_start();
-        }
-        $_SESSION['usuario_id'] = $this->id;
-        $_SESSION['nombre'] = $this->nombre;
-        $_SESSION['email'] = $this->email;
-        return true;
+
+    // Implementación básica de IUsuario
+    public function login(): bool {
+        // Aquí se debería implementar lógica concreta en clases hijas
+        return false;
     }
-    
-    public function logout() {
-        if (isset($_SESSION)) {
-            session_unset();
-            session_destroy();
-        }
+
+    public function logout(): void {
+        session_start();
+        session_unset();
+        session_destroy();
     }
-    
-    public function getId() {
+
+    public function getId(): ?int {
         return $this->id;
     }
-    
-    public function getNombre() {
+
+    public function getNombre(): string {
         return $this->nombre;
     }
-    
-    public function getEmail() {
+
+    public function getEmail(): string {
         return $this->email;
     }
-    
-    // Método abstracto que debe ser implementado por las clases hijas
+
+    public function getPassword(): string {
+        return $this->password;
+    }
+
+    // Método abstracto que deben implementar las clases hijas
     abstract public function actualizarPerfil();
 }
 ?>

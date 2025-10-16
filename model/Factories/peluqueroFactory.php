@@ -2,7 +2,7 @@
 require_once 'config/database.php';
 
 /**
- * PeluqueroFactory - Singleton Pattern + Factory
+ * PeluqueroFactory - Singleton + Factory
  * Punto único de acceso para crear cualquier tipo de usuario
  */
 class PeluqueroFactory {
@@ -14,9 +14,7 @@ class PeluqueroFactory {
         $this->conn = $database->getConnection();
     }
     
-    /**
-     * Obtener instancia única (Singleton)
-     */
+    // Obtener instancia única (Singleton)
     public static function getInstance() {
         if (self::$instance === null) {
             self::$instance = new PeluqueroFactory();
@@ -24,12 +22,7 @@ class PeluqueroFactory {
         return self::$instance;
     }
     
-    /**
-     * Crear usuario según tipo
-     * @param string $tipo ('cliente', 'barbero', 'admin')
-     * @param array $datos
-     * @return IUsuario|null
-     */
+    // Crear usuario según tipo
     public function crearUsuario($tipo, $datos) {
         require_once 'ClienteFactory.php';
         require_once 'BarberoFactory.php';
@@ -56,9 +49,7 @@ class PeluqueroFactory {
         return $factory ? $factory->crearUsuario($datos) : null;
     }
     
-    /**
-     * Crear perfil según tipo
-     */
+    // Crear perfil según tipo
     public function crearPerfil($tipo) {
         require_once 'ClienteFactory.php';
         require_once 'BarberoFactory.php';
@@ -83,10 +74,10 @@ class PeluqueroFactory {
         return $factory ? $factory->crearPerfil() : null;
     }
     
-    // Prevenir clonación
+    // Evitar clonación
     private function __clone() {}
     
-    // Prevenir unserialización
+    // Evitar unserialización
     public function __wakeup() {
         throw new Exception("Cannot unserialize singleton");
     }

@@ -1,11 +1,16 @@
 <?php
-session_start();
-require_once 'autoload.php';
+session_start(); // Iniciar sesión
+require_once 'autoload.php'; // Autoload de clases
 
+// Obtener acción desde la URL, por defecto 'mostrarDashboard'
 $action = $_GET['action'] ?? 'mostrarDashboard';
 
+// Instancia genérica de adminController (por defecto)
 $controller = new adminController();
+
+// Switch principal para manejar todas las rutas
 switch($action) {
+
     // ===== DASHBOARD PRINCIPAL =====
     case 'mostrarDashboard':
         $controller = new dashboardController();
@@ -13,6 +18,7 @@ switch($action) {
         break;
     
     case 'mostrarMisReservas':
+        // Validar que el usuario esté logueado
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: index.php?action=mostrarLogin');
             exit;
@@ -22,6 +28,7 @@ switch($action) {
         break;
     
     case 'cancelarReserva':
+        // Validar sesión
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: index.php?action=mostrarLogin');
             exit;
@@ -59,6 +66,7 @@ switch($action) {
     
     // ===== RESERVAS =====
     case 'mostrarReserva':
+        // Validar sesión
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: index.php?action=mostrarLogin');
             exit;
@@ -68,6 +76,7 @@ switch($action) {
         break;
     
     case 'confirmarReserva':
+        // Validar sesión
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: index.php?action=mostrarLogin');
             exit;
@@ -81,7 +90,9 @@ switch($action) {
         $controller->obtenerHorasDisponibles();
         break;
 
+    // ===== ADMIN =====
     case 'mostrarLoginAdmin':
+        $controller = new adminController();
         $controller->mostrarLoginAdmin();
         break;
 
@@ -90,7 +101,7 @@ switch($action) {
         break;
 
     case 'adminDashboard':
-        // Validar sesión antes de mostrar dashboard
+        // Validar sesión y tipo de usuario
         if (!isset($_SESSION['logged_in']) || $_SESSION['tipo_usuario'] != 1) {
             header('Location: index.php?action=mostrarLoginAdmin');
             exit;   
@@ -102,23 +113,19 @@ switch($action) {
         $controller->logoutAdmin();
         break;
 
-    
-    // ===== RUTA POR DEFECTO =====
-    default:
-        $controller = new dashboardController();
-        $controller->mostrarDashboard();
+    // ===== PERFIL =====
+    case 'mostrarPerfil':
+        // Validar sesión
+        if (!isset($_SESSION['usuario_id'])) {
+            header('Location: index.php?action=mostrarLogin');
+            exit;
+        }
+        $controller = new perfilController();
+        $controller->mostrarPerfil();
         break;
 
-    case 'mostrarPerfil':
-    if (!isset($_SESSION['usuario_id'])) {
-        header('Location: index.php?action=mostrarLogin');
-        exit;
-    }
-    $controller = new perfilController();
-    $controller->mostrarPerfil();
-    break;
-
     case 'actualizarPerfil':
+        // Validar sesión
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: index.php?action=mostrarLogin');
             exit;
@@ -128,6 +135,7 @@ switch($action) {
         break;
 
     case 'reprogramarCita':
+        // Validar sesión
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: index.php?action=mostrarLogin');
             exit;
@@ -136,7 +144,9 @@ switch($action) {
         $controller->reprogramarCita();
         break;
 
+    // ===== ADMIN REGISTRO =====
     case 'mostrarRegistroAdmin':
+        // Validar sesión y tipo de usuario
         if (!isset($_SESSION['usuario_id']) || $_SESSION['tipo_usuario'] != 1) {
             header('Location: index.php?action=mostrarLogin');
             exit;
@@ -146,12 +156,19 @@ switch($action) {
         break;
 
     case 'procesarRegistroAdmin':
+        // Validar sesión y tipo de usuario
         if (!isset($_SESSION['usuario_id']) || $_SESSION['tipo_usuario'] != 1) {
             header('Location: index.php?action=mostrarLogin');
             exit;
         }
         $controller = new registroAdminController();
         $controller->procesarRegistroAdmin();
+        break;
+
+    // ===== RUTA POR DEFECTO =====
+    default:
+        $controller = new dashboardController();
+        $controller->mostrarDashboard();
         break;
 }
 ?>

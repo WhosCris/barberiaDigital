@@ -4,6 +4,7 @@ require_once __DIR__ . '/../Profesional.php';
 
 class BarberoFactory extends UsuarioFactory {
     
+    // Crear un nuevo barbero en la base de datos
     public function crearUsuario($datos) {
         $query = "INSERT INTO usuario 
                   (nombre, email, password, telefono, id_tipo_usuario, id_peluqueria, estado) 
@@ -26,6 +27,7 @@ class BarberoFactory extends UsuarioFactory {
         return null;
     }
     
+    // Crear perfil de barbero sin datos
     public function crearPerfil() {
         return new Profesional($this->conn);
     }

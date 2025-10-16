@@ -1,4 +1,3 @@
-
 <?php
 require_once 'config/database.php';
 
@@ -10,9 +9,12 @@ class barberoModel {
         $this->conn = $database->getConnection();
     }
 
-    // Obtener todos los barberos activos (tipo_usuario = 3)
+    /**
+     * Obtener todos los barberos activos (tipo_usuario = 3)
+     * @return array
+     */
     public function obtenerBarberos() {
-        $query = "SELECT u.id_usuario as id, u.nombre 
+        $query = "SELECT u.id_usuario AS id, u.nombre 
                   FROM usuario u 
                   WHERE u.id_tipo_usuario = 3 
                   AND u.estado = 'activo' 
@@ -22,9 +24,12 @@ class barberoModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Obtener todos los servicios activos
+    /**
+     * Obtener todos los servicios activos
+     * @return array
+     */
     public function obtenerServicios() {
-        $query = "SELECT id_servicio as id, nombre_servicio as nombre, precio, duracion 
+        $query = "SELECT id_servicio AS id, nombre_servicio AS nombre, precio, duracion 
                   FROM servicio 
                   WHERE id_peluqueria = 1 
                   ORDER BY nombre_servicio";
@@ -33,7 +38,11 @@ class barberoModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Obtener barbero por ID
+    /**
+     * Obtener barbero por su ID
+     * @param int $id
+     * @return array|null
+     */
     public function obtenerBarberoPorId($id) {
         $query = "SELECT u.id_usuario, u.nombre, u.email 
                   FROM usuario u 

@@ -4,8 +4,8 @@ require_once __DIR__ . '/../Cliente.php';
 
 class ClienteFactory extends UsuarioFactory {
     
+    // Crear un nuevo cliente en la base de datos
     public function crearUsuario($datos) {
-        // Crear cliente en la base de datos
         $query = "INSERT INTO usuario 
                   (nombre, email, password, telefono, id_tipo_usuario, estado) 
                   VALUES (:nombre, :email, :password, :telefono, 2, 'activo')";
@@ -27,8 +27,8 @@ class ClienteFactory extends UsuarioFactory {
         return null;
     }
     
+    // Crear perfil de cliente sin datos
     public function crearPerfil() {
-        // Retorna una instancia de Cliente para operaciones de perfil
         return new Cliente($this->conn);
     }
 }

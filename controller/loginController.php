@@ -9,7 +9,7 @@ class loginController {
     }
 
     public function mostrarFormularioLogin() {
-        // Si ya está logueado, redirigir a reservas
+        // Si el usuario ya inició sesión, redirige al dashboard
         if (isset($_SESSION['usuario_id'])) {
             header('Location: index.php?action=mostrarDashboard');
             exit;
@@ -17,7 +17,6 @@ class loginController {
         include 'view/login.php';
     }
 
-    // Procesar login
     public function procesarLogin() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: index.php?action=mostrarLogin');
@@ -26,44 +25,40 @@ class loginController {
 
         $email = $_POST['email'] ?? '';
         $password = $_POST['password'] ?? '';
-
         $errores = [];
 
-        // Validar email
+        // Validación básica de campos
         if (empty($email)) {
             $errores['email'] = 'El email es obligatorio';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errores['email'] = 'Email no válido';
         }
 
-        // Validar password
         if (empty($password)) {
             $errores['password'] = 'La contraseña es obligatoria';
         }
 
-        // Si hay errores, volver al formulario
+        // Si hay errores, vuelve al formulario
         if (!empty($errores)) {
             include 'view/login.php';
             return;
         }
 
-        // Intentar autenticar
+        // Autentica al usuario
         $resultado = $this->usuarioModel->autenticar($email, $password);
 
         if ($resultado['success']) {
-            // Guardar datos en sesión
+            // Guarda la sesión del usuario
             $_SESSION['usuario_id'] = $resultado['usuario']['id_usuario'];
             $_SESSION['nombre'] = $resultado['usuario']['nombre'];
             $_SESSION['email'] = $resultado['usuario']['email'];
             $_SESSION['tipo_usuario'] = $resultado['usuario']['id_tipo_usuario'];
 
-            // Redirigir según tipo de usuario
+            // Redirige según el tipo de usuario
             if ($resultado['usuario']['id_tipo_usuario'] == 2) {
-                // Cliente - ir a reservas
-                header('Location: index.php?action=mostrarDashboard');
+                header('Location: index.php?action=mostrarDashboard'); // Cliente
             } else {
-                // Admin o Barbero - por ahora también a reservas
-                header('Location: index.php?action=mostrarDashboard');
+                header('Location: index.php?action=mostrarDashboard'); // Admin o barbero
             }
             exit;
         } else {
@@ -72,7 +67,6 @@ class loginController {
         }
     }
 
-    // Cerrar sesión
     public function logout() {
         session_destroy();
         header('Location: index.php?action=mostrarLogin');

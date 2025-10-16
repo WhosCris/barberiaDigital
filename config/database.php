@@ -1,7 +1,7 @@
 <?php
 class Database {
     private $host = 'localhost';
-    private $db_name = 'barberiaonline';  // ← Tu base de datos
+    private $db_name = 'barberiaonline'; 
     private $username = 'root';
     private $password = '';
     private $conn;

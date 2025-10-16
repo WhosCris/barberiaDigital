@@ -15,28 +15,28 @@ class dashboardController {
     }
 
     public function mostrarDashboard() {
-        // Obtener datos completos del usuario si está logueado
+        // Datos del usuario si está logueado
         $usuario = null;
         if (isset($_SESSION['usuario_id'])) {
             $usuario = $this->usuarioModel->obtenerPorId($_SESSION['usuario_id']);
         }
         
-        // Obtener barberos
+        // Barberos disponibles
         $barberos = $this->barberoModel->obtenerBarberos();
         
-        // Obtener próxima cita del usuario
+        // Próxima cita del usuario
         $proximaCita = null;
         if (isset($_SESSION['usuario_id'])) {
             $proximaCita = $this->reservaModel->obtenerProximaCita($_SESSION['usuario_id']);
         }
         
-        // Obtener horarios disponibles para hoy
+        // Horarios disponibles del día
         $horariosDisponibles = $this->obtenerHorariosDelDia();
         
         include 'view/dashboard.php';
     }
 
-    // Obtener horarios del día actual
+    // Genera la lista de horarios disponibles para hoy
     private function obtenerHorariosDelDia() {
         $fecha_hoy = date('Y-m-d');
         $horarios = [];
@@ -46,6 +46,7 @@ class dashboardController {
         foreach ($barberos as $barbero) {
             $horasDisponibles = $this->reservaModel->obtenerHorasDisponibles($barbero['id'], $fecha_hoy);
             
+            // Se limita a las primeras 8 horas disponibles
             foreach (array_slice($horasDisponibles, 0, 8) as $hora) {
                 $horarios[] = [
                     'hora' => $hora,
@@ -59,8 +60,8 @@ class dashboardController {
         return $horarios;
     }
 
-    // Mostrar mis reservas
     public function mostrarMisReservas() {
+        // Redirige si el usuario no ha iniciado sesión
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: index.php?action=mostrarLogin');
             exit;
@@ -70,8 +71,8 @@ class dashboardController {
         include 'view/misReservas.php';
     }
 
-    // Cancelar una reserva
     public function cancelarReserva() {
+        // Solo usuarios logueados pueden cancelar
         if (!isset($_SESSION['usuario_id'])) {
             header('Location: index.php?action=mostrarLogin');
             exit;
