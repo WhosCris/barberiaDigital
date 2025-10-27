@@ -1,5 +1,5 @@
 <?php
-require_once 'UsuarioFactory.php';
+require_once 'barberiaDigital/Factories/usuarioFactory.php';
 require_once __DIR__ . '/../Administrador.php';
 
 class AdminFactory extends UsuarioFactory {
@@ -28,7 +28,7 @@ class AdminFactory extends UsuarioFactory {
     }
     
     // Crear perfil de administrador sin datos
-    public function crearPerfil() {
+    public function crearPerfil(){
         return new Administrador($this->conn);
     }
 }

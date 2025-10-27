@@ -6,7 +6,7 @@ abstract class Usuario implements IUsuario {
     protected $id;
     protected $nombre;
     protected $email;
-    protected $password; // <-- Hash de la contraseña
+    protected $password;
     protected $telefono;
     protected $conn;
     
